@@ -11,7 +11,6 @@ const Samples = () => {
   const [statusFilter, setStatusFilter] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedSample, setSelectedSample] = useState(null);
-  const [updating, setUpdating] = useState(false);
   const pagination = usePagination(1, 10);
 
   // Submit modal state
