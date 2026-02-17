@@ -1,0 +1,72 @@
+.analyse-page {
+  padding: 2rem;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.analyse-header {
+  margin-bottom: 1.5rem;
+}
+
+.analyse-header h1 {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.analyse-header p {
+  color: #6b7280;
+  margin-top: 0.25rem;
+}
+
+.analyse-modal .sample-info {
+  background: #f9fafb;
+  padding: 1rem;
+  border-radius: 0.375rem;
+  margin-bottom: 1.5rem;
+}
+
+.analyse-modal .sample-info p {
+  margin-bottom: 0.5rem;
+}
+
+.parameters-form {
+  margin-bottom: 1.5rem;
+}
+
+.parameters-form h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 0.5rem;
+}
+
+.form-hint {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin-bottom: 1rem;
+}
+
+.parameters-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.parameter-input-group {
+  margin-bottom: 0.5rem;
+}
+
+.parameter-input-group .form-label {
+  font-size: 0.875rem;
+}
+
+@media (max-width: 768px) {
+  .analyse-page {
+    padding: 1rem;
+  }
+
+  .parameters-grid {
+    grid-template-columns: 1fr;
+  }
+}

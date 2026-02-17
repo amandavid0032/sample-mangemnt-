@@ -1,0 +1,423 @@
+.parameters-page {
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.parameters-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.parameters-header h1 {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: var(--gray-900);
+  margin-bottom: 0.25rem;
+}
+
+.parameters-header p {
+  color: var(--gray-500);
+  font-size: 0.9375rem;
+}
+
+/* ===== TYPE BADGES ===== */
+.type-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.375rem 0.75rem;
+  border-radius: var(--radius);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+.type-max {
+  background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+  color: #1d4ed8;
+}
+
+.type-range {
+  background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%);
+  color: #1B5E20;
+}
+
+.type-enum {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  color: #b45309;
+}
+
+.type-text {
+  background: linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%);
+  color: #7c3aed;
+}
+
+/* ===== CATEGORY BADGES ===== */
+.category-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.375rem 0.75rem;
+  border-radius: var(--radius);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.category-physical {
+  background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+  color: #0369a1;
+}
+
+.category-chemical {
+  background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+  color: #15803d;
+}
+
+.category-biological {
+  background: linear-gradient(135deg, #fef9c3 0%, #fef08a 100%);
+  color: #a16207;
+}
+
+.category-heavy_metal {
+  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+  color: #b91c1c;
+}
+
+.category-disinfection {
+  background: linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%);
+  color: #7c3aed;
+}
+
+/* ===== INACTIVE ROW ===== */
+.inactive-row {
+  opacity: 0.5;
+  background-color: var(--gray-50) !important;
+}
+
+.inactive-row:hover {
+  opacity: 0.6;
+}
+
+/* Serial number */
+.serial-number {
+  font-weight: 600;
+  color: var(--gray-500);
+  text-align: center;
+  width: 50px;
+}
+
+/* Param code */
+.param-code {
+  background: #E8F5E9 !important;
+  color: #2E7D32 !important;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* Limit cell */
+.limit-cell {
+  font-size: 0.8125rem;
+  max-width: 200px;
+}
+
+/* Test method cell */
+.test-method-cell {
+  font-size: 0.8125rem;
+  color: var(--gray-600);
+  max-width: 150px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Pagination info */
+.pagination-info {
+  text-align: center;
+  padding: 1rem;
+  color: var(--gray-500);
+  font-size: 0.875rem;
+}
+
+/* ===== PRESET SELECTOR ===== */
+.preset-selector {
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%);
+  border-radius: var(--radius-lg);
+  border: 1px solid #A5D6A7;
+}
+
+.preset-selector .form-label {
+  color: #1B5E20;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.preset-count {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #2E7D32;
+  background: white;
+  padding: 0.125rem 0.5rem;
+  border-radius: 9999px;
+}
+
+.all-presets-added {
+  padding: 0.75rem 1rem;
+  background: #dcfce7;
+  color: #166534;
+  border-radius: var(--radius);
+  font-weight: 500;
+  text-align: center;
+}
+
+.preset-dropdown {
+  background: white;
+  font-weight: 500;
+}
+
+.preset-dropdown optgroup {
+  font-weight: 700;
+  color: #1B5E20;
+  background: #E8F5E9;
+}
+
+.preset-dropdown option {
+  font-weight: 400;
+  color: #1f2937;
+  padding: 0.5rem;
+}
+
+.form-divider {
+  height: 1px;
+  background: var(--gray-200);
+  margin: 1rem 0;
+}
+
+/* ===== FORM ROW MODAL ===== */
+.form-row-modal {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1rem;
+}
+
+.form-row-modal .form-group {
+  margin-bottom: 0;
+}
+
+/* ===== ENUM OPTIONS ===== */
+.enum-options-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+  padding: 1rem;
+  background: var(--gray-50);
+  border-radius: var(--radius-lg);
+  border: 1px dashed var(--gray-200);
+}
+
+.enum-option-row {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.75rem;
+  background: white;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--gray-100);
+}
+
+.enum-option-row .form-input {
+  margin-bottom: 0;
+  font-size: 0.875rem;
+  padding: 0.625rem 0.875rem;
+}
+
+.enum-option-row .btn-danger {
+  flex-shrink: 0;
+  padding: 0.5rem;
+  width: 36px;
+  height: 36px;
+}
+
+.enum-options-list > .btn-secondary {
+  align-self: flex-start;
+  margin-top: 0.5rem;
+}
+
+/* ===== ENUM DROPDOWN BOX ===== */
+.enum-dropdown-box {
+  border: 2px solid #2E7D32;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: white;
+}
+
+.enum-dropdown-header {
+  padding: 0.75rem 1rem;
+  background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%);
+  color: #1B5E20;
+  font-weight: 600;
+  border-bottom: 2px solid #2E7D32;
+}
+
+.enum-dropdown-list {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.enum-dropdown-item {
+  padding: 0.625rem 1rem;
+  border-bottom: 1px solid #E8F5E9;
+  color: #1f2937;
+  cursor: default;
+  transition: background 0.15s;
+}
+
+.enum-dropdown-item:last-child {
+  border-bottom: none;
+}
+
+.enum-dropdown-item:hover {
+  background: #E8F5E9;
+}
+
+.enum-dropdown-empty {
+  padding: 1rem;
+  color: var(--gray-400);
+  font-style: italic;
+  text-align: center;
+}
+
+/* ===== FORM HELP TEXT ===== */
+.form-help {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--gray-500);
+  margin-top: 0.25rem;
+}
+
+/* ===== TABLE ENHANCEMENTS ===== */
+.parameters-page .table-container {
+  background: white;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--gray-100);
+  overflow: hidden;
+}
+
+.parameters-page .table th {
+  background: linear-gradient(180deg, var(--gray-50) 0%, white 100%);
+  padding: 1rem 1.25rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: var(--gray-500);
+  text-transform: uppercase;
+  letter-spacing: 0.075em;
+  border-bottom: 2px solid var(--gray-100);
+}
+
+.parameters-page .table td {
+  padding: 1rem 1.25rem;
+  vertical-align: middle;
+  color: var(--gray-700);
+}
+
+.parameters-page .table td:first-child {
+  font-weight: 600;
+  color: var(--gray-800);
+}
+
+.parameters-page .table tbody tr {
+  border-bottom: 1px solid var(--gray-50);
+}
+
+.parameters-page .table tbody tr:last-child {
+  border-bottom: none;
+}
+
+/* ===== ACTION BUTTONS ===== */
+.parameters-page .action-buttons {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+.parameters-page .action-buttons .btn {
+  min-width: 70px;
+}
+
+/* ===== STATUS INDICATOR OVERRIDE ===== */
+.parameters-page .status-indicator {
+  font-size: 0.8125rem;
+  padding: 0.375rem 1rem;
+}
+
+/* ===== LIMIT INFO ===== */
+.limit-info {
+  font-size: 0.875rem;
+  color: var(--gray-600);
+  line-height: 1.5;
+}
+
+.limit-info strong {
+  color: var(--gray-800);
+}
+
+/* ===== TEST METHOD ===== */
+.test-method-info {
+  font-size: 0.8125rem;
+  color: var(--gray-600);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1024px) {
+  .parameters-page {
+    padding: 1.5rem;
+  }
+
+  .parameters-page .table th,
+  .parameters-page .table td {
+    padding: 0.875rem 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .parameters-page {
+    padding: 1rem;
+  }
+
+  .parameters-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .parameters-header .btn {
+    align-self: flex-start;
+  }
+
+  .form-row-modal {
+    grid-template-columns: 1fr;
+  }
+
+  .enum-option-row {
+    flex-wrap: wrap;
+  }
+
+  .enum-option-row .form-input:first-child {
+    flex: 1 1 100%;
+  }
+}

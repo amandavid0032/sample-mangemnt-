@@ -1,0 +1,9 @@
+export { default as Login } from './Login';
+export { default as Dashboard } from './Dashboard';
+export { default as Samples } from './Samples';
+export { default as Team } from './Team';
+export { default as Parameters } from './Parameters';
+export { default as CreateSample } from './CreateSample';
+export { default as MySamples } from './MySamples';
+export { default as Analyse } from './Analyse';
+export { default as PublicPortal } from './PublicPortal';

@@ -1,0 +1,59 @@
+.team-page {
+  padding: 2rem;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.team-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.team-header h1 {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.team-header p {
+  color: #6b7280;
+  margin-top: 0.25rem;
+}
+
+.role-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.role-admin {
+  background-color: #fce7f3;
+  color: #be185d;
+}
+
+.role-analyst {
+  background-color: #dbeafe;
+  color: #1d4ed8;
+}
+
+.role-field_agent {
+  background-color: #d1fae5;
+  color: #047857;
+}
+
+@media (max-width: 768px) {
+  .team-page {
+    padding: 1rem;
+  }
+
+  .team-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
