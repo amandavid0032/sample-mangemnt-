@@ -293,12 +293,15 @@ select.form-input {
   letter-spacing: 0.025em;
 }
 
-/* Lifecycle Status Badges (Simplified: TESTING → PUBLISHED → ARCHIVED) */
-.badge-testing { background-color: var(--warning-light); color: #b45309; }
+/* Lifecycle Status Badges (FIELD + LAB workflow) */
+.badge-collected { background-color: #e0e7ff; color: #4338ca; }
+.badge-field_tested { background-color: #fef3c7; color: #b45309; }
+.badge-lab_tested { background-color: #dbeafe; color: #1d4ed8; }
 .badge-published { background-color: var(--success-light); color: #047857; }
 .badge-archived { background-color: var(--gray-100); color: var(--gray-600); }
 
 /* Legacy support for old statuses */
+.badge-testing { background-color: var(--warning-light); color: #b45309; }
 .badge-created { background-color: var(--gray-100); color: var(--gray-600); }
 .badge-accepted { background-color: var(--primary-light); color: var(--primary-dark); }
 .badge-analysed { background-color: #fef3c7; color: #b45309; }

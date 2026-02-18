@@ -47,10 +47,15 @@ export const samplesAPI = {
   create: (formData) => api.post('/samples', formData, {
     headers: { 'Content-Type': 'multipart/form-data' }
   }),
-  submit: (id, parameters) => api.post(`/samples/${id}/submit`, { parameters }),
+  // LAB test submission (FIELD_TESTED → LAB_TESTED)
+  submitLabTest: (id, parameters) => api.post(`/samples/${id}/lab-test`, { parameters }),
+  // Publish sample (LAB_TESTED → PUBLISHED)
+  publish: (id) => api.patch(`/samples/${id}/publish`),
   archive: (id) => api.patch(`/samples/${id}/archive`),
   restore: (id) => api.patch(`/samples/${id}/restore`),
-  getStats: () => api.get('/samples/stats')
+  getStats: () => api.get('/samples/stats'),
+  // Get LAB parameters for admin form
+  getLabParameters: () => api.get('/parameters', { params: { testLocation: 'LAB' } })
 };
 
 // Parameters API

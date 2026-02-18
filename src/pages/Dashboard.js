@@ -31,14 +31,15 @@ const Dashboard = () => {
   if (loading) return <Loading message="Loading dashboard..." />;
   if (error) return <div className="alert alert-error">{error}</div>;
 
+  // Calculate testing count (field tested + lab tested but not published)
+  const testingCount = (stats.byStatus?.fieldTestedOnly || 0) + (stats.byStatus?.labTested || 0);
+  const publishedCount = stats.byStatus?.published || 0;
+
   const lifecycleData = {
     labels: ['Testing', 'Published'],
     datasets: [
       {
-        data: [
-          stats.byLifecycle?.TESTING || 0,
-          stats.byLifecycle?.PUBLISHED || 0
-        ],
+        data: [testingCount, publishedCount],
         backgroundColor: ['#F59E0B', '#22C55E'],
         borderWidth: 0
       }
@@ -93,14 +94,14 @@ const Dashboard = () => {
         <div className="stat-card stat-testing">
           <div className="stat-content">
             <h3>Testing</h3>
-            <p className="stat-number">{stats.byLifecycle?.TESTING || 0}</p>
+            <p className="stat-number">{testingCount}</p>
           </div>
         </div>
 
         <div className="stat-card stat-published">
           <div className="stat-content">
             <h3>Published</h3>
-            <p className="stat-number">{stats.byLifecycle?.PUBLISHED || 0}</p>
+            <p className="stat-number">{publishedCount}</p>
           </div>
         </div>
 
@@ -112,20 +113,6 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <div className="quality-stats">
-        <div className="quality-card acceptable">
-          <span className="quality-label">Acceptable</span>
-          <span className="quality-value">{stats.byOverallStatus?.ACCEPTABLE || 0}</span>
-        </div>
-        <div className="quality-card permissible">
-          <span className="quality-label">Permissible</span>
-          <span className="quality-value">{stats.byOverallStatus?.PERMISSIBLE || 0}</span>
-        </div>
-        <div className="quality-card not-acceptable">
-          <span className="quality-label">Not Acceptable</span>
-          <span className="quality-value">{stats.byOverallStatus?.NOT_ACCEPTABLE || 0}</span>
-        </div>
-      </div>
 
       <div className="charts-grid">
         <div className="chart-card">

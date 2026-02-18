@@ -175,26 +175,6 @@ const PublicPortal = () => {
         <p>View published environmental sample data</p>
       </div>
 
-      {stats && (
-        <div className="portal-stats">
-          <div className="portal-stat">
-            <span className="stat-value">{stats.totalPublished}</span>
-            <span className="stat-label">Published Samples</span>
-          </div>
-          <div className="portal-stat good">
-            <span className="stat-value">{stats.byStatus?.ACCEPTABLE || 0}</span>
-            <span className="stat-label">Acceptable</span>
-          </div>
-          <div className="portal-stat moderate">
-            <span className="stat-value">{stats.byStatus?.PERMISSIBLE || 0}</span>
-            <span className="stat-label">Permissible</span>
-          </div>
-          <div className="portal-stat poor">
-            <span className="stat-value">{stats.byStatus?.NOT_ACCEPTABLE || 0}</span>
-            <span className="stat-label">Not Acceptable</span>
-          </div>
-        </div>
-      )}
 
       <div className="portal-controls card">
         <form onSubmit={handleSearch} className="filter-form">
@@ -342,7 +322,7 @@ const PublicPortal = () => {
                 </div>
                 <div className="detail-item">
                   <label>Published Date</label>
-                  <span>{selectedSample.publishedAt ? new Date(selectedSample.publishedAt).toLocaleDateString() : 'N/A'}</span>
+                  <span>{selectedSample.testInfo?.publishedAt ? new Date(selectedSample.testInfo.publishedAt).toLocaleDateString() : 'N/A'}</span>
                 </div>
                 <div className="detail-item">
                   <label>Overall Status</label>
@@ -413,7 +393,9 @@ const PublicPortal = () => {
                     <div className="image-item">
                       <label>Sample Image</label>
                       <img
-                        src={`${process.env.REACT_APP_API_URL?.replace('/api', '') || 'http://localhost:5000'}${selectedSample.images.sampleImageUrl}`}
+                        src={selectedSample.images.sampleImageUrl.startsWith('http')
+                          ? selectedSample.images.sampleImageUrl
+                          : `${process.env.REACT_APP_API_URL?.replace('/api', '') || 'http://localhost:5000'}${selectedSample.images.sampleImageUrl}`}
                         alt="Sample"
                       />
                     </div>
@@ -422,7 +404,9 @@ const PublicPortal = () => {
                     <div className="image-item">
                       <label>Location Image</label>
                       <img
-                        src={`${process.env.REACT_APP_API_URL?.replace('/api', '') || 'http://localhost:5000'}${selectedSample.images.locationImageUrl}`}
+                        src={selectedSample.images.locationImageUrl.startsWith('http')
+                          ? selectedSample.images.locationImageUrl
+                          : `${process.env.REACT_APP_API_URL?.replace('/api', '') || 'http://localhost:5000'}${selectedSample.images.locationImageUrl}`}
                         alt="Location"
                       />
                     </div>
