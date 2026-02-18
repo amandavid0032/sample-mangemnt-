@@ -5,42 +5,46 @@ import { usePagination } from '../hooks';
 import './Parameters.css';
 
 // IS 10500:2012 Water Quality Parameters - 12 Parameters as per documentation
+// FIELD = Tested on-site by Team Member
+// LAB = Tested in laboratory by Admin
 const WATER_QUALITY_PRESETS = [
+  // ========== FIELD PARAMETERS (5) ==========
   // 1. Temperature - TEXT (free text input)
-  { code: 'TEMPERATURE', name: 'Temperature', unit: '-', type: 'TEXT', testMethod: '-' },
+  { code: 'TEMPERATURE', name: 'Temperature', unit: '°C', type: 'TEXT', testLocation: 'FIELD', testMethod: 'IS 3025 (Part 9)' },
 
   // 2. pH - RANGE (6.5 to 8.5)
-  { code: 'PH', name: 'pH', unit: '-', type: 'RANGE', acceptableMin: 6.5, acceptableMax: 8.5, testMethod: 'IS 3025 Part 11' },
+  { code: 'PH', name: 'pH', unit: '-', type: 'RANGE', testLocation: 'FIELD', acceptableMin: 6.5, acceptableMax: 8.5, testMethod: 'IS 3025 (Part 11)' },
 
   // 3. Apparent Colour - ENUM (dropdown)
-  { code: 'APPARENT_COLOUR', name: 'Apparent Colour', unit: '-', type: 'ENUM', enumValues: 'Clear, Yellowish, Brownish, Blackish', testMethod: '-' },
+  { code: 'APPARENT_COLOUR', name: 'Apparent Colour', unit: '-', type: 'ENUM', testLocation: 'FIELD', enumValues: 'Clear, Yellowish, Brownish, Blackish', testMethod: 'Visual' },
 
-  // 4. True Colour - MAX (5 Hazen)
-  { code: 'TRUE_COLOUR', name: 'True Colour', unit: 'Hazen', type: 'MAX', acceptableMax: 5, permissibleMax: 15, testMethod: 'IS 3025 (Part 4)' },
+  // 4. Odour - ENUM (dropdown)
+  { code: 'ODOUR', name: 'Odour', unit: '-', type: 'ENUM', testLocation: 'FIELD', enumValues: 'Unobjectionable, Earthy, Sewer smell', testMethod: 'IS 3025 (Part 5)' },
 
-  // 5. Odour - ENUM (dropdown)
-  { code: 'ODOUR', name: 'Odour', unit: '-', type: 'ENUM', enumValues: 'Unobjectionable, Earthy, Sewer smell', testMethod: 'IS 3025 (Part 5)' },
+  // 5. Turbidity - MAX (1 NTU)
+  { code: 'TURBIDITY', name: 'Turbidity', unit: 'NTU', type: 'MAX', testLocation: 'FIELD', acceptableMax: 1, permissibleMax: 5, testMethod: 'IS 3025 (Part 10)' },
 
-  // 6. Turbidity - MAX (1 NTU)
-  { code: 'TURBIDITY', name: 'Turbidity', unit: 'NTU', type: 'MAX', acceptableMax: 1, permissibleMax: 5, testMethod: 'IS 3025 (Part 10)' },
+  // ========== LAB PARAMETERS (7) ==========
+  // 6. True Colour - MAX (5 Hazen)
+  { code: 'TRUE_COLOUR', name: 'True Colour', unit: 'Hazen', type: 'MAX', testLocation: 'LAB', acceptableMax: 5, permissibleMax: 15, testMethod: 'IS 3025 (Part 4)' },
 
   // 7. Total Dissolved Solids - MAX (500 mg/L)
-  { code: 'TDS', name: 'Total Dissolved Solids', unit: 'mg/L', type: 'MAX', acceptableMax: 500, permissibleMax: 2000, testMethod: 'IS 3025 (Part 16)' },
+  { code: 'TDS', name: 'Total Dissolved Solids', unit: 'mg/L', type: 'MAX', testLocation: 'LAB', acceptableMax: 500, permissibleMax: 2000, testMethod: 'IS 3025 (Part 16)' },
 
   // 8. Aluminum - MAX (0.03 mg/L)
-  { code: 'ALUMINUM', name: 'Aluminum (as Al)', unit: 'mg/L', type: 'MAX', acceptableMax: 0.03, permissibleMax: 0.2, testMethod: 'IS 3025 (Part 55)' },
+  { code: 'ALUMINUM', name: 'Aluminum (as Al)', unit: 'mg/L', type: 'MAX', testLocation: 'LAB', acceptableMax: 0.03, permissibleMax: 0.2, testMethod: 'IS 3025 (Part 55)' },
 
   // 9. Ammonia - MAX (0.5 mg/L)
-  { code: 'AMMONIA', name: 'Ammonia (as Total Ammonia-N)', unit: 'mg/L', type: 'MAX', acceptableMax: 0.5, permissibleMax: 0.5, testMethod: 'IS 3025 (Part 34)' },
+  { code: 'AMMONIA', name: 'Ammonia (as Total Ammonia-N)', unit: 'mg/L', type: 'MAX', testLocation: 'LAB', acceptableMax: 0.5, permissibleMax: 0.5, testMethod: 'IS 3025 (Part 34)' },
 
   // 10. Chloride - MAX (250 mg/L)
-  { code: 'CHLORIDE', name: 'Chloride (as Cl)', unit: 'mg/L', type: 'MAX', acceptableMax: 250, permissibleMax: 1000, testMethod: 'IS 3025 (Part 32)' },
+  { code: 'CHLORIDE', name: 'Chloride (as Cl)', unit: 'mg/L', type: 'MAX', testLocation: 'LAB', acceptableMax: 250, permissibleMax: 1000, testMethod: 'IS 3025 (Part 32)' },
 
   // 11. Free Residual Chlorine - MAX (0.2 mg/L)
-  { code: 'FREE_CHLORINE', name: 'Free Residual Chlorine', unit: 'mg/L', type: 'MAX', acceptableMax: 0.2, permissibleMax: 1.0, testMethod: 'IS 3024 (Part 26)' },
+  { code: 'FREE_CHLORINE', name: 'Free Residual Chlorine', unit: 'mg/L', type: 'MAX', testLocation: 'LAB', acceptableMax: 0.2, permissibleMax: 1.0, testMethod: 'IS 3025 (Part 26)' },
 
   // 12. Total Hardness - MAX (200 mg/L)
-  { code: 'HARDNESS', name: 'Total Hardness (as CaCO3)', unit: 'mg/L', type: 'MAX', acceptableMax: 200, permissibleMax: 600, testMethod: 'IS 3024 (Part 21)' }
+  { code: 'HARDNESS', name: 'Total Hardness (as CaCO3)', unit: 'mg/L', type: 'MAX', testLocation: 'LAB', acceptableMax: 200, permissibleMax: 600, testMethod: 'IS 3025 (Part 21)' }
 ];
 
 const Parameters = () => {
@@ -57,6 +61,7 @@ const Parameters = () => {
     name: '',
     unit: '',
     type: 'MAX',
+    testLocation: 'FIELD',
     acceptableMin: '',
     acceptableMax: '',
     permissibleMin: '',
@@ -95,6 +100,7 @@ const Parameters = () => {
       name: '',
       unit: '',
       type: 'MAX',
+      testLocation: 'FIELD',
       acceptableMin: '',
       acceptableMax: '',
       permissibleMin: '',
@@ -117,6 +123,7 @@ const Parameters = () => {
       name: param.name || '',
       unit: param.unit || '',
       type: param.type || 'MAX',
+      testLocation: param.testLocation || 'FIELD',
       acceptableMin: param.acceptableLimit?.min ?? '',
       acceptableMax: param.acceptableLimit?.max ?? '',
       permissibleMin: param.permissibleLimit?.min ?? '',
@@ -143,6 +150,7 @@ const Parameters = () => {
         name: preset.name,
         unit: preset.unit,
         type: preset.type,
+        testLocation: preset.testLocation || 'FIELD',
         acceptableMin: preset.acceptableMin ?? '',
         acceptableMax: preset.acceptableMax ?? '',
         permissibleMin: preset.permissibleMin ?? '',
@@ -166,6 +174,7 @@ const Parameters = () => {
         name: formData.name,
         unit: formData.unit,
         type: formData.type,
+        testLocation: formData.testLocation,
         testMethod: formData.testMethod || ''
       };
 
@@ -282,6 +291,7 @@ const Parameters = () => {
                   <th>Parameter</th>
                   <th>Unit</th>
                   <th>Type</th>
+                  <th>Test Location</th>
                   <th>Standard Limit</th>
                   <th>Test Method</th>
                   <th>Status</th>
@@ -291,7 +301,7 @@ const Parameters = () => {
               <tbody>
                 {parameters.length === 0 ? (
                   <tr>
-                    <td colSpan="9" style={{ textAlign: 'center' }}>No parameters found</td>
+                    <td colSpan="10" style={{ textAlign: 'center' }}>No parameters found</td>
                   </tr>
                 ) : (
                   parameters.map((param, index) => (
@@ -303,6 +313,11 @@ const Parameters = () => {
                       <td>
                         <span className={`type-badge type-${param.type?.toLowerCase()}`}>
                           {param.type || 'N/A'}
+                        </span>
+                      </td>
+                      <td>
+                        <span className={`location-badge location-${param.testLocation?.toLowerCase() || 'field'}`}>
+                          {param.testLocation || 'FIELD'}
                         </span>
                       </td>
                       <td className="limit-cell">{getStandardDisplay(param)}</td>
@@ -444,6 +459,23 @@ const Parameters = () => {
                 <option value="ENUM">Options (Enum)</option>
                 <option value="TEXT">Text Input</option>
               </select>
+            </div>
+          </div>
+
+          <div className="form-row-modal">
+            <div className="form-group">
+              <label className="form-label">Test Location *</label>
+              <select
+                name="testLocation"
+                className="form-input"
+                value={formData.testLocation}
+                onChange={handleChange}
+                required
+              >
+                <option value="FIELD">FIELD (On-site by Team Member)</option>
+                <option value="LAB">LAB (Laboratory by Admin)</option>
+              </select>
+              <small className="form-help">Where this parameter will be tested</small>
             </div>
           </div>
 

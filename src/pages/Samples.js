@@ -188,6 +188,7 @@ const Samples = () => {
                   <th>Address</th>
                   <th>Status</th>
                   <th>Overall</th>
+                  <th>Submitted By</th>
                   <th>Date</th>
                   <th>Actions</th>
                 </tr>
@@ -195,7 +196,7 @@ const Samples = () => {
               <tbody>
                 {samples.length === 0 ? (
                   <tr>
-                    <td colSpan="6" style={{ textAlign: 'center' }}>No samples found</td>
+                    <td colSpan="7" style={{ textAlign: 'center' }}>No samples found</td>
                   </tr>
                 ) : (
                   samples.map(sample => (
@@ -208,6 +209,7 @@ const Samples = () => {
                           <StatusBadge status={sample.overallStatus} type="condition" />
                         ) : '-'}
                       </td>
+                      <td>{sample.submittedBy?.name || '-'}</td>
                       <td>{new Date(sample.createdAt).toLocaleDateString()}</td>
                       <td>
                         <div className="action-buttons">
@@ -283,6 +285,26 @@ const Samples = () => {
                   </span>
                 </div>
               </div>
+              {selectedSample.submittedBy && (
+                <div className="info-card">
+                  <div className="info-card-icon">🔬</div>
+                  <div className="info-card-content">
+                    <span className="info-card-label">Submitted By</span>
+                    <span className="info-card-value">{selectedSample.submittedBy?.name || 'N/A'}</span>
+                  </div>
+                </div>
+              )}
+              {selectedSample.submittedAt && (
+                <div className="info-card">
+                  <div className="info-card-icon">✅</div>
+                  <div className="info-card-content">
+                    <span className="info-card-label">Submitted At</span>
+                    <span className="info-card-value">
+                      {new Date(selectedSample.submittedAt).toLocaleString()}
+                    </span>
+                  </div>
+                </div>
+              )}
               <div className="info-card">
                 <div className="info-card-icon">🌐</div>
                 <div className="info-card-content">
