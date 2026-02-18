@@ -14,7 +14,6 @@ const PublicPortal = () => {
     fromDate: '',
     toDate: ''
   });
-  const [stats, setStats] = useState(null);
   const [mapData, setMapData] = useState([]);
   const [selectedSample, setSelectedSample] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -37,14 +36,10 @@ const PublicPortal = () => {
         if (!params[key]) delete params[key];
       });
 
-      const [samplesRes, statsRes] = await Promise.all([
-        publicAPI.getSamples(params),
-        publicAPI.getStats()
-      ]);
+      const samplesRes = await publicAPI.getSamples(params);
 
       setSamples(samplesRes.data.data);
       pagination.updatePagination(samplesRes.data.pagination);
-      setStats(statsRes.data.data);
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to load samples');
     } finally {
