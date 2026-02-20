@@ -55,7 +55,20 @@ export const samplesAPI = {
   restore: (id) => api.patch(`/samples/${id}/restore`),
   getStats: () => api.get('/samples/stats'),
   // Get LAB parameters for admin form
-  getLabParameters: () => api.get('/parameters', { params: { testLocation: 'LAB' } })
+  getLabParameters: () => api.get('/parameters', { params: { testLocation: 'LAB' } }),
+  // Download PDF report
+  downloadPDF: async (id, sampleId) => {
+    const response = await api.get(`/samples/${id}/pdf`, { responseType: 'blob' });
+    const blob = new Blob([response.data], { type: 'application/pdf' });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${sampleId || 'sample'}-report.pdf`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+  }
 };
 
 // Parameters API
@@ -83,7 +96,20 @@ export const publicAPI = {
   getSampleById: (id) => api.get(`/public/samples/${id}`),
   getStats: () => api.get('/public/stats'),
   getMapData: () => api.get('/public/map'),
-  getFilters: () => api.get('/public/filters')
+  getFilters: () => api.get('/public/filters'),
+  // Download PDF report (public)
+  downloadPDF: async (id, sampleId) => {
+    const response = await api.get(`/public/samples/${id}/pdf`, { responseType: 'blob' });
+    const blob = new Blob([response.data], { type: 'application/pdf' });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${sampleId || 'sample'}-report.pdf`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+  }
 };
 
 export default api;

@@ -1,16 +1,30 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import './Navbar.css';
 
 const Navbar = () => {
   const { user, logout, isAuthenticated, isAdmin, isTeamMember } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const [showDropdown, setShowDropdown] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Check if on public page - hide menu items
+  const isPublicPage = location.pathname === '/public';
+
+  // Close mobile menu when route changes
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [location.pathname]);
 
   const handleLogout = () => {
     logout();
     navigate('/login');
+  };
+
+  const toggleMobileMenu = () => {
+    setMobileMenuOpen(!mobileMenuOpen);
   };
 
   return (
@@ -20,35 +34,64 @@ const Navbar = () => {
           Sample Management
         </Link>
 
-        <div className="navbar-menu">
-          {isAuthenticated ? (
-            <>
-              {isAdmin && (
-                <>
-                  <Link to="/dashboard" className="navbar-link">Dashboard</Link>
-                  <Link to="/samples" className="navbar-link">Samples</Link>
-                  <Link to="/parameters" className="navbar-link">Parameters</Link>
-                  <Link to="/team" className="navbar-link">Team</Link>
-                </>
-              )}
-              {isTeamMember && (
-                <>
-                  <Link to="/my-samples" className="navbar-link">My Samples</Link>
-                  <Link to="/create-sample" className="navbar-link">New Sample</Link>
-                  <Link to="/analyse" className="navbar-link">Analyse</Link>
-                </>
-              )}
-            </>
-          ) : (
-            <>
-              <Link to="/public" className="navbar-link">Public Portal</Link>
-              <Link to="/login" className="btn btn-primary">Login</Link>
-            </>
-          )}
-        </div>
+        {/* Hamburger button - only shows on mobile */}
+        {!isPublicPage && (
+          <button className="hamburger-btn" onClick={toggleMobileMenu} aria-label="Toggle menu">
+            <span className={`hamburger-line ${mobileMenuOpen ? 'open' : ''}`}></span>
+            <span className={`hamburger-line ${mobileMenuOpen ? 'open' : ''}`}></span>
+            <span className={`hamburger-line ${mobileMenuOpen ? 'open' : ''}`}></span>
+          </button>
+        )}
 
-        {isAuthenticated && (
-          <div className="navbar-profile">
+        {!isPublicPage && (
+          <div className={`navbar-menu ${mobileMenuOpen ? 'mobile-open' : ''}`}>
+            {isAuthenticated ? (
+              <>
+                {isAdmin && (
+                  <>
+                    <Link to="/dashboard" className="navbar-link" onClick={() => setMobileMenuOpen(false)}>Dashboard</Link>
+                    <Link to="/samples" className="navbar-link" onClick={() => setMobileMenuOpen(false)}>Samples</Link>
+                    <Link to="/parameters" className="navbar-link" onClick={() => setMobileMenuOpen(false)}>Parameters</Link>
+                    <Link to="/team" className="navbar-link" onClick={() => setMobileMenuOpen(false)}>Team</Link>
+                  </>
+                )}
+                {isTeamMember && (
+                  <>
+                    <Link to="/my-samples" className="navbar-link" onClick={() => setMobileMenuOpen(false)}>My Samples</Link>
+                    <Link to="/create-sample" className="navbar-link" onClick={() => setMobileMenuOpen(false)}>New Sample</Link>
+                    <Link to="/analyse" className="navbar-link" onClick={() => setMobileMenuOpen(false)}>Analyse</Link>
+                  </>
+                )}
+
+                {/* Mobile profile section - only visible in mobile menu */}
+                <div className="mobile-profile-section">
+                  <div className="mobile-profile-header">
+                    <span className="navbar-avatar">{user?.name?.charAt(0).toUpperCase()}</span>
+                    <div className="mobile-profile-info">
+                      <span className="mobile-profile-name">{user?.name}</span>
+                      <span className="mobile-profile-role">{user?.role}</span>
+                    </div>
+                  </div>
+                  <button onClick={() => { handleLogout(); setMobileMenuOpen(false); }} className="mobile-logout-btn">
+                    Logout
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
+                <Link to="/public" className="navbar-link" onClick={() => setMobileMenuOpen(false)}>Public Portal</Link>
+                <Link to="/login" className="btn btn-primary" onClick={() => setMobileMenuOpen(false)}>Login</Link>
+              </>
+            )}
+          </div>
+        )}
+
+        {/* Overlay for mobile menu */}
+        {mobileMenuOpen && <div className="mobile-overlay" onClick={() => setMobileMenuOpen(false)}></div>}
+
+        {/* Desktop profile dropdown - hidden on mobile */}
+        {!isPublicPage && isAuthenticated && (
+          <div className="navbar-profile desktop-only">
             <button
               className="navbar-profile-btn"
               onClick={() => setShowDropdown(!showDropdown)}

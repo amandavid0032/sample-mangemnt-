@@ -17,6 +17,7 @@ const PublicPortal = () => {
   const [mapData, setMapData] = useState([]);
   const [selectedSample, setSelectedSample] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [downloading, setDownloading] = useState(false);
   const mapContainer = useRef(null);
   const map = useRef(null);
   const pagination = usePagination(1, 10);
@@ -51,8 +52,8 @@ const PublicPortal = () => {
     try {
       const response = await publicAPI.getMapData();
       setMapData(response.data.data);
-    } catch (err) {
-      console.error('Failed to load map data');
+    } catch {
+      // Map data is optional, silently fail
     }
   }, []);
 
@@ -161,6 +162,18 @@ const PublicPortal = () => {
     setSelectedSample(null);
   };
 
+  // Download PDF report
+  const handleDownloadPDF = async (sample) => {
+    try {
+      setDownloading(true);
+      await publicAPI.downloadPDF(sample._id, sample.sampleId);
+    } catch (err) {
+      alert('Failed to download PDF report');
+    } finally {
+      setDownloading(false);
+    }
+  };
+
   if (error) return <div className="alert alert-error">{error}</div>;
 
   return (
@@ -243,12 +256,21 @@ const PublicPortal = () => {
                       </td>
                       <td>{new Date(sample.collectedAt).toLocaleDateString()}</td>
                       <td>
-                        <button
-                          className="btn btn-primary btn-sm"
-                          onClick={() => handleViewSample(sample)}
-                        >
-                          View
-                        </button>
+                        <div className="action-buttons">
+                          <button
+                            className="btn btn-primary btn-sm"
+                            onClick={() => handleViewSample(sample)}
+                          >
+                            View
+                          </button>
+                          <button
+                            className="btn btn-secondary btn-sm"
+                            onClick={() => handleDownloadPDF(sample)}
+                            disabled={downloading}
+                          >
+                            PDF
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))
@@ -409,6 +431,17 @@ const PublicPortal = () => {
                 </div>
               </div>
             )}
+
+            {/* Download Button */}
+            <div className="modal-action-buttons">
+              <button
+                className="btn btn-primary"
+                onClick={() => handleDownloadPDF(selectedSample)}
+                disabled={downloading}
+              >
+                {downloading ? 'Downloading...' : 'Download PDF Report'}
+              </button>
+            </div>
           </div>
         )}
       </Modal>

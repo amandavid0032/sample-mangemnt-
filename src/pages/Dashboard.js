@@ -47,16 +47,15 @@ const Dashboard = () => {
   };
 
   const overallData = {
-    labels: ['Acceptable', 'Permissible', 'Not Acceptable'],
+    labels: ['Acceptable', 'Not Acceptable'],
     datasets: [
       {
         label: 'Sample Quality',
         data: [
           stats.byOverallStatus?.ACCEPTABLE || 0,
-          stats.byOverallStatus?.PERMISSIBLE || 0,
           stats.byOverallStatus?.NOT_ACCEPTABLE || 0
         ],
-        backgroundColor: ['#22C55E', '#F59E0B', '#EF4444']
+        backgroundColor: ['#22C55E', '#EF4444']
       }
     ]
   };

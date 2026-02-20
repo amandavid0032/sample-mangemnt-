@@ -1,5 +1,6 @@
+/* ===== TEAM PAGE ===== */
 .team-page {
-  padding: 2rem;
+  padding: var(--space-8);
   max-width: 1280px;
   margin: 0 auto;
 }
@@ -8,27 +9,28 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--space-6);
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: var(--space-4);
 }
 
 .team-header h1 {
-  font-size: 1.875rem;
+  font-size: var(--font-3xl);
   font-weight: 700;
-  color: #1f2937;
+  color: var(--gray-800);
 }
 
 .team-header p {
-  color: #6b7280;
-  margin-top: 0.25rem;
+  color: var(--gray-500);
+  margin-top: var(--space-1);
 }
 
+/* ===== ROLE BADGES ===== */
 .role-badge {
   display: inline-block;
-  padding: 0.25rem 0.75rem;
+  padding: var(--space-1) var(--space-3);
   border-radius: 9999px;
-  font-size: 0.75rem;
+  font-size: var(--font-xs);
   font-weight: 500;
 }
 
@@ -43,17 +45,47 @@
 }
 
 .role-field_agent {
-  background-color: #d1fae5;
+  background-color: var(--success-light);
   color: #047857;
 }
 
-@media (max-width: 768px) {
+/* ===== RESPONSIVE ===== */
+@media (max-width: 480px) {
   .team-page {
-    padding: 1rem;
+    padding: var(--space-4);
   }
 
   .team-header {
     flex-direction: column;
     align-items: flex-start;
+  }
+}
+
+@media (max-width: 768px) {
+  .team-page {
+    padding: var(--space-4);
+  }
+
+  .team-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .team-page {
+    padding: var(--space-6);
+  }
+}
+
+@media (min-width: 1440px) {
+  .team-page {
+    max-width: 1400px;
+  }
+}
+
+@media (min-width: 1920px) {
+  .team-page {
+    max-width: 1600px;
   }
 }

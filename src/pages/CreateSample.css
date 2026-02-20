@@ -1,31 +1,32 @@
+/* ===== CREATE SAMPLE PAGE ===== */
 .create-sample-page {
-  padding: 2rem;
+  padding: var(--space-8);
   max-width: 800px;
   margin: 0 auto;
 }
 
 .create-sample-header {
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--space-6);
 }
 
 .create-sample-header h1 {
-  font-size: 1.875rem;
+  font-size: var(--font-3xl);
   font-weight: 700;
-  color: #1f2937;
+  color: var(--gray-800);
 }
 
 .create-sample-header p {
-  color: #6b7280;
-  margin-top: 0.25rem;
+  color: var(--gray-500);
+  margin-top: var(--space-1);
 }
 
 .create-sample-form {
-  padding: 2rem;
+  padding: var(--space-8);
 }
 
 .form-row {
   display: flex;
-  gap: 1rem;
+  gap: var(--space-4);
   flex-wrap: wrap;
   align-items: flex-end;
 }
@@ -36,37 +37,38 @@
 }
 
 .get-location-btn {
-  margin-bottom: 1rem;
+  margin-bottom: var(--space-4);
   white-space: nowrap;
 }
 
 .file-input {
-  padding: 0.5rem;
+  padding: var(--space-2);
 }
 
 .file-name {
   display: block;
-  margin-top: 0.5rem;
-  font-size: 0.875rem;
-  color: #6b7280;
+  margin-top: var(--space-2);
+  font-size: var(--font-sm);
+  color: var(--gray-500);
 }
 
 .form-actions {
   display: flex;
   justify-content: flex-end;
-  gap: 1rem;
-  margin-top: 1.5rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid #e5e7eb;
+  gap: var(--space-4);
+  margin-top: var(--space-6);
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--gray-200);
 }
 
-@media (max-width: 768px) {
+/* ===== RESPONSIVE ===== */
+@media (max-width: 480px) {
   .create-sample-page {
-    padding: 1rem;
+    padding: var(--space-4);
   }
 
   .create-sample-form {
-    padding: 1rem;
+    padding: var(--space-4);
   }
 
   .form-row {
@@ -75,5 +77,54 @@
 
   .form-row .form-group {
     width: 100%;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .form-actions .btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .create-sample-page {
+    padding: var(--space-4);
+  }
+
+  .create-sample-form {
+    padding: var(--space-4);
+  }
+
+  .form-row {
+    flex-direction: column;
+  }
+
+  .form-row .form-group {
+    width: 100%;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .create-sample-page {
+    padding: var(--space-6);
+    max-width: 700px;
+  }
+
+  .create-sample-form {
+    padding: var(--space-6);
+  }
+}
+
+@media (min-width: 1440px) {
+  .create-sample-page {
+    max-width: 900px;
+  }
+}
+
+@media (min-width: 1920px) {
+  .create-sample-page {
+    max-width: 1000px;
   }
 }

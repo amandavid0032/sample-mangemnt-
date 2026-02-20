@@ -25,10 +25,9 @@ const Samples = () => {
   const [showLabModal, setShowLabModal] = useState(false);
   const [labTargetSample, setLabTargetSample] = useState(null);
   const [labParameters, setLabParameters] = useState([]);
-  const [selectedLabParams, setSelectedLabParams] = useState({}); // {paramId: true/false}
-  const [labModalStep, setLabModalStep] = useState('select'); // 'select' or 'fill'
   const [parameterValues, setParameterValues] = useState({});
   const [submitting, setSubmitting] = useState(false);
+  const [downloading, setDownloading] = useState(false);
 
   const fetchSamples = useCallback(async () => {
     try {
@@ -74,68 +73,12 @@ const Samples = () => {
       const response = await parametersAPI.getAll(false, 1, 100);
       const labParams = response.data.data.filter(p => p.isActive && p.testLocation === 'LAB');
       setLabParameters(labParams);
-      // Initialize selection (all unchecked)
-      const initialSelection = {};
-      labParams.forEach(p => {
-        initialSelection[p._id] = false;
-      });
-      setSelectedLabParams(initialSelection);
       setParameterValues({});
-      setLabModalStep('select'); // Start with selection step
       setSelectedSample(null);
       setShowLabModal(true);
     } catch (err) {
       alert('Failed to load LAB parameters');
     }
-  };
-
-  // Toggle parameter selection
-  const toggleParamSelection = (paramId) => {
-    setSelectedLabParams(prev => ({
-      ...prev,
-      [paramId]: !prev[paramId]
-    }));
-  };
-
-  // Select all parameters
-  const selectAllParams = () => {
-    const allSelected = {};
-    labParameters.forEach(p => {
-      allSelected[p._id] = true;
-    });
-    setSelectedLabParams(allSelected);
-  };
-
-  // Deselect all parameters
-  const deselectAllParams = () => {
-    const noneSelected = {};
-    labParameters.forEach(p => {
-      noneSelected[p._id] = false;
-    });
-    setSelectedLabParams(noneSelected);
-  };
-
-  // Proceed to fill values step
-  const proceedToFillValues = () => {
-    const selectedCount = Object.values(selectedLabParams).filter(Boolean).length;
-    if (selectedCount === 0) {
-      alert('Please select at least one LAB parameter');
-      return;
-    }
-    // Initialize values for selected params only
-    const initialValues = {};
-    labParameters.forEach(p => {
-      if (selectedLabParams[p._id]) {
-        initialValues[p._id] = '';
-      }
-    });
-    setParameterValues(initialValues);
-    setLabModalStep('fill');
-  };
-
-  // Go back to selection step
-  const backToSelection = () => {
-    setLabModalStep('select');
   };
 
   // Handle parameter value change
@@ -150,26 +93,17 @@ const Samples = () => {
   const handleLabTestSubmit = async (e) => {
     e.preventDefault();
 
-    // Build parameters array (only selected params with values)
-    const selectedParamIds = Object.keys(selectedLabParams).filter(id => selectedLabParams[id]);
-    const parameters = selectedParamIds
-      .filter(paramId => parameterValues[paramId] !== '' && parameterValues[paramId] !== undefined)
-      .map(paramId => ({
-        parameterRef: paramId,
-        value: isNaN(parameterValues[paramId]) ? parameterValues[paramId] : parseFloat(parameterValues[paramId])
+    // Build parameters array (only params with values filled)
+    const parameters = labParameters
+      .filter(param => parameterValues[param._id] !== '' && parameterValues[param._id] !== undefined)
+      .map(param => ({
+        parameterRef: param._id,
+        value: isNaN(parameterValues[param._id]) ? parameterValues[param._id] : parseFloat(parameterValues[param._id])
       }));
 
     if (parameters.length === 0) {
-      alert('Please enter values for selected LAB parameters');
+      alert('Please enter at least one LAB parameter value');
       return;
-    }
-
-    // Check if all selected parameters are filled
-    if (parameters.length < selectedParamIds.length) {
-      const missing = selectedParamIds.length - parameters.length;
-      if (!window.confirm(`${missing} selected parameter(s) are not filled. Continue anyway?`)) {
-        return;
-      }
     }
 
     try {
@@ -178,10 +112,8 @@ const Samples = () => {
       setShowLabModal(false);
       setLabTargetSample(null);
       setParameterValues({});
-      setSelectedLabParams({});
-      setLabModalStep('select');
       fetchSamples();
-      alert('LAB test submitted successfully! Sample is now ready for publishing.');
+      alert('LAB test submitted and sample published successfully!');
     } catch (err) {
       alert(err.response?.data?.message || 'Failed to submit LAB test');
     } finally {
@@ -225,6 +157,18 @@ const Samples = () => {
     fetchSamples();
   };
 
+  // Download PDF report
+  const handleDownloadPDF = async (sample) => {
+    try {
+      setDownloading(true);
+      await samplesAPI.downloadPDF(sample._id, sample.sampleId);
+    } catch (err) {
+      alert(err.response?.data?.message || 'Failed to download PDF');
+    } finally {
+      setDownloading(false);
+    }
+  };
+
   // Get action buttons based on testInfo status (with fallback for old samples)
   const getActionButtons = (sample) => {
     const buttons = [];
@@ -264,8 +208,18 @@ const Samples = () => {
       );
     }
 
-    // Published - can archive
+    // Published - can download PDF and archive
     if (isPublished) {
+      buttons.push(
+        <button
+          key="download"
+          className="btn btn-primary btn-sm"
+          onClick={() => handleDownloadPDF(sample)}
+          disabled={downloading}
+        >
+          PDF
+        </button>
+      );
       buttons.push(
         <button
           key="archive"
@@ -653,12 +607,21 @@ const Samples = () => {
                 </button>
               )}
               {getDisplayStatus(selectedSample) === 'PUBLISHED' && (
-                <button
-                  className="btn btn-warning"
-                  onClick={() => handleArchive(selectedSample)}
-                >
-                  Archive
-                </button>
+                <>
+                  <button
+                    className="btn btn-primary"
+                    onClick={() => handleDownloadPDF(selectedSample)}
+                    disabled={downloading}
+                  >
+                    {downloading ? 'Downloading...' : 'Download PDF'}
+                  </button>
+                  <button
+                    className="btn btn-warning"
+                    onClick={() => handleArchive(selectedSample)}
+                  >
+                    Archive
+                  </button>
+                </>
               )}
               <button className="btn btn-secondary" onClick={() => setSelectedSample(null)}>
                 Close
@@ -668,15 +631,13 @@ const Samples = () => {
         )}
       </Modal>
 
-      {/* Submit LAB Test Modal - Two Steps */}
+      {/* Submit LAB Test Modal */}
       <Modal
         isOpen={showLabModal}
         onClose={() => {
           setShowLabModal(false);
           setLabTargetSample(null);
           setParameterValues({});
-          setSelectedLabParams({});
-          setLabModalStep('select');
         }}
         title={`Submit LAB Test - ${labTargetSample?.sampleId || ''}`}
         size="large"
@@ -696,47 +657,60 @@ const Samples = () => {
               <div className="no-parameters-message">
                 <p>No active LAB parameters found. Please add LAB parameters first.</p>
               </div>
-            ) : labModalStep === 'select' ? (
-              /* STEP 1: Select Parameters */
-              <>
+            ) : (
+              <form onSubmit={handleLabTestSubmit}>
                 <div className="step-header">
-                  <h4>Step 1: Select LAB Parameters to Test</h4>
-                  <div className="select-actions">
-                    <button type="button" className="btn btn-sm btn-secondary" onClick={selectAllParams}>
-                      Select All
-                    </button>
-                    <button type="button" className="btn btn-sm btn-secondary" onClick={deselectAllParams}>
-                      Deselect All
-                    </button>
-                  </div>
+                  <h4>Enter LAB Parameter Values</h4>
+                  <p className="step-hint">Fill in the values for parameters you tested. Empty fields will be skipped.</p>
                 </div>
 
-                <div className="parameters-checkbox-grid">
+                <div className="parameters-input-grid">
                   {labParameters.map(param => (
-                    <label
+                    <div
                       key={param._id}
-                      className={`parameter-checkbox-card ${selectedLabParams[param._id] ? 'selected' : ''}`}
+                      className={`parameter-input-card ${parameterValues[param._id] ? 'has-value' : ''}`}
                     >
-                      <input
-                        type="checkbox"
-                        checked={selectedLabParams[param._id] || false}
-                        onChange={() => toggleParamSelection(param._id)}
-                      />
-                      <div className="parameter-checkbox-content">
-                        <div className="parameter-header">
-                          <span className="parameter-code">{param.code}</span>
-                          <span className="parameter-location-badge lab">LAB</span>
+                      <div className="parameter-header">
+                        <span className="parameter-code">{param.code}</span>
+                        <span className="parameter-location-badge lab">LAB</span>
+                        <div className="parameter-info">
+                          <div className="parameter-name">{param.name}</div>
+                          <div className="parameter-unit">Unit: {param.unit}</div>
                         </div>
-                        <div className="parameter-name">{param.name}</div>
-                        <div className="parameter-unit">Unit: {param.unit}</div>
                       </div>
-                    </label>
+
+                      {param.type === 'ENUM' ? (
+                        <select
+                          className="form-select"
+                          value={parameterValues[param._id] || ''}
+                          onChange={(e) => handleParamValueChange(param._id, e.target.value)}
+                        >
+                          <option value="">-- Select Value --</option>
+                          {param.enumEvaluation && Object.keys(
+                            param.enumEvaluation instanceof Map
+                              ? Object.fromEntries(param.enumEvaluation)
+                              : param.enumEvaluation
+                          ).map((val, idx) => (
+                            <option key={idx} value={val}>{val}</option>
+                          ))}
+                        </select>
+                      ) : (
+                        <input
+                          type={param.type === 'TEXT' ? 'text' : 'number'}
+                          className="form-input"
+                          placeholder={`Enter value (${param.unit})`}
+                          value={parameterValues[param._id] || ''}
+                          onChange={(e) => handleParamValueChange(param._id, e.target.value)}
+                          step="any"
+                        />
+                      )}
+                    </div>
                   ))}
                 </div>
 
                 <div className="submit-form-footer">
                   <div className="submit-stats">
-                    <strong>{Object.values(selectedLabParams).filter(Boolean).length}</strong> of {labParameters.length} parameters selected
+                    <strong>{Object.values(parameterValues).filter(v => v !== '').length}</strong> of {labParameters.length} parameters filled
                   </div>
                   <div className="submit-form-actions">
                     <button
@@ -745,90 +719,10 @@ const Samples = () => {
                       onClick={() => {
                         setShowLabModal(false);
                         setLabTargetSample(null);
-                        setSelectedLabParams({});
+                        setParameterValues({});
                       }}
                     >
                       Cancel
-                    </button>
-                    <button
-                      type="button"
-                      className="btn btn-primary"
-                      onClick={proceedToFillValues}
-                    >
-                      Next: Enter Values
-                    </button>
-                  </div>
-                </div>
-              </>
-            ) : (
-              /* STEP 2: Fill Values */
-              <form onSubmit={handleLabTestSubmit}>
-                <div className="step-header">
-                  <h4>Step 2: Enter Values for Selected Parameters</h4>
-                  <button type="button" className="btn btn-sm btn-secondary" onClick={backToSelection}>
-                    Back to Selection
-                  </button>
-                </div>
-
-                <div className="parameters-input-grid">
-                  {labParameters
-                    .filter(param => selectedLabParams[param._id])
-                    .map(param => (
-                      <div
-                        key={param._id}
-                        className={`parameter-input-card ${parameterValues[param._id] ? 'has-value' : ''}`}
-                      >
-                        <div className="parameter-header">
-                          <span className="parameter-code">{param.code}</span>
-                          <span className="parameter-location-badge lab">LAB</span>
-                          <div className="parameter-info">
-                            <div className="parameter-name">{param.name}</div>
-                            <div className="parameter-unit">Unit: {param.unit}</div>
-                          </div>
-                        </div>
-
-                        {param.type === 'ENUM' ? (
-                          <select
-                            className="form-select"
-                            value={parameterValues[param._id] || ''}
-                            onChange={(e) => handleParamValueChange(param._id, e.target.value)}
-                            required
-                          >
-                            <option value="">-- Select Value --</option>
-                            {param.enumEvaluation && Object.keys(
-                              param.enumEvaluation instanceof Map
-                                ? Object.fromEntries(param.enumEvaluation)
-                                : param.enumEvaluation
-                            ).map((val, idx) => (
-                              <option key={idx} value={val}>{val}</option>
-                            ))}
-                          </select>
-                        ) : (
-                          <input
-                            type={param.type === 'TEXT' ? 'text' : 'number'}
-                            className="form-input"
-                            placeholder={`Enter value (${param.unit})`}
-                            value={parameterValues[param._id] || ''}
-                            onChange={(e) => handleParamValueChange(param._id, e.target.value)}
-                            step="any"
-                            required
-                          />
-                        )}
-                      </div>
-                    ))}
-                </div>
-
-                <div className="submit-form-footer">
-                  <div className="submit-stats">
-                    <strong>{Object.values(parameterValues).filter(v => v !== '').length}</strong> of {Object.values(selectedLabParams).filter(Boolean).length} selected parameters filled
-                  </div>
-                  <div className="submit-form-actions">
-                    <button
-                      type="button"
-                      className="btn btn-secondary"
-                      onClick={backToSelection}
-                    >
-                      Back
                     </button>
                     <button
                       type="submit"
